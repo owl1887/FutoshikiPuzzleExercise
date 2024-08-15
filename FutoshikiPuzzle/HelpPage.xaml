@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FutoshikiPuzzle.HelpPage"
+             Title="Pomoc">
+    <ScrollView>
+    <VerticalStackLayout>
+        
+        <StackLayout Padding="20">
+           
+            
+                <Label FontSize="14" Text="Futoshiki je puzzle igra na ploči, poznata i pod imenom Unequal. Igra se na kvadratnoj ploči koja ima zadanu veličinu (na primjer 5x5)." />
+                <Label FontSize="14" Text="  Svrha igre je otkriti znamenke skrivene unutar ćelija ploče; svaka ćelija je ispunjena znamenkom između 1 i veličine ploče." FontAttributes="Bold" />
+                <Label FontSize="14" Text= "U svakom se retku i stupcu svaka znamenka pojavljuje tačno jedanput; stoga, kada se otkriju, znamenke ploče tvore takozvani latinski kvadrat. Na početku igre mogu se otkriti neke znamenke.
+                       Ploča također može sadržavati neke nejednakosti između stanica ploče; te se nejednakosti moraju poštivati ​​i mogu se koristiti kao tragovi za otkrivanje preostalih skrivenih znamenki.
+                       Za svaku zagonetku zajamčeno je rješenje i samo jedno."/>
+
+                <Label Text="Mozete koristiti dugme za savjete koje radi kada imate dvije celije popunjenje, algoritam vam moze pomoci pri pupunjavanju trece celije." FontAttributes="Italic"/>
+
+
+
+
+            </StackLayout>
+   
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

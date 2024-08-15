@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FutoshikiPuzzle.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FutoshikiPuzzle"
+    Shell.FlyoutBehavior="Disabled"
+    Title="FutoshikiPuzzle">
+
+
+    <TabBar>
+        
+    <ShellContent
+            Title="Igra"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+    <ShellContent
+            Title="Pomoc"
+            ContentTemplate="{DataTemplate local:HelpPage}"
+        />
+    <ShellContent
+            Title="Taktike"
+            ContentTemplate="{DataTemplate local:TacticsPage}"
+    />
+    <ShellContent
+            Title="O nama"
+            ContentTemplate="{DataTemplate local:AboutPage}"
+     />
+
+
+    </TabBar>
+
+</Shell>

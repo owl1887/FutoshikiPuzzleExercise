@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FutoshikiPuzzle.AboutPage"
+             Title="O nama">
+    <VerticalStackLayout>
+        <ScrollView>
+            <StackLayout Padding="20">
+
+
+                <Label Text="Drago nam je da ste odabrali nasu verziju igre da igrate. Sretno!"  FontSize="12"/>
+
+                <Label Text="Ako zelite stupiti u kontakt sa nama, ili ako primjetite neki bug mozete nas kontaktirati na mejl:"  FontSize="12"/>
+                
+                <Label Text ="E-mail: futoshiki_puzzle.customerservice@gamestudio.com" FontAttributes="Bold" LineBreakMode="TailTruncation" FontSize="12"/>
+            </StackLayout>
+        </ScrollView>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FutoshikiPuzzle.TacticsPage"
+             Title="Taktike">
+    <ScrollView>
+        <VerticalStackLayout>
+       
+            <StackLayout Padding="20">
+               
+
+              <Label Text="  Postoje dva pravila koja možete preneti iz sudokua da biste pomogli u rešavanju futošiki zagonetke."/>
+
+                <Label Text="  Prvi od njih je da vidimo koje vrijednosti mogu da budu u svakoj ćeliji, npr. od 1 - 5 u mreži 5 k 5, poštujući pravilo da svaki broj mora biti postavljen tačno jednom u svakom regionu. "/>
+
+                <Label Text="  Drugo pravilo je da gledate gdje broj može da ide unutar regiona (red ili kolona), a ne na nivou pojedinačne ćelije. Ovo su dva najčešće korišćena pravila iz sudokua, tako da ih treba upoznati. "/>
+
+                <Label Text="  Postoje i druga pravila koja možete koristiti, na prijmer ono što se ponekad naziva AB eliminacija, na prijmer, ako u okviru regiona dve ćelije obe imaju ove kandidate '21' onda znate da jedna mora biti 1, a druga mora biti 2, stoga može eliminisati ove brojeve iz drugih ćelija u tom regionu."/>
+
+                <Label Text="  Druga ključna razlika, naravno, u odnosu na sudoku je korištenje nejednakosti da bi se utvrdilo šta ide gdje. "/>
+
+                <Label Text="  Ako imate ćelija A ► ćelija B, onda možete, na primjer, odmah eliminisati 1 iz ćelije a i 5 iz ćelije b. "/>
+
+                <Label Text="  Postoje i pravila koja važe za postojanje više od jedne nejednakosti u regionu ili iz ćelije. Na primjer, ako imate ovo: "/>
+
+                <Label Text=" ćelija A ◄ ćelija B ► ćelija C  "/>
+
+                <Label Text="  ... onda znate da ćelija B mora biti 3,4,5 - ne može biti 2 jer dvije ćelije moraju biti manje od nje. Imajte na umu da ovo funkcioniše jer se dve ćelije koje su veće nego u istom regionu, ako bi druga ćelija bila veća nego što je bila u drugom regionu, onda se očigledno ista logika ne bi primjenila"/>
+
+
+            </StackLayout>
+       
+        
+        
+    </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

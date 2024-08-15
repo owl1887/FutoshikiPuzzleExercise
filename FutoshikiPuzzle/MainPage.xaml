@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FutoshikiPuzzle.MainPage">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <!-- Naslov Labela -->
+        <Label Text="Futoshiki Puzzle"
+               FontSize="12"
+               HorizontalOptions="Center"
+               VerticalOptions="Start" />
+
+        <!-- ListBox obabiranje velicine mreze -->
+        <Picker x:Name="GridSizePicker"
+                Title="Odaberite velinu mreze."
+                HorizontalOptions="Center"
+                FontSize="9"
+                VerticalOptions="Start">
+            
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>4x4</x:String>
+                    <x:String>5x5</x:String>
+                    <x:String>6x6</x:String>
+                    <x:String>7x7</x:String>
+                    <x:String>8x8</x:String>
+                    <x:String>9x9</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
+        <!-- Grid za puzlu -->
+        <Grid x:Name="PuzzleGrid"
+              RowDefinitions="{OnPlatform iOS='*,*,*,*', Android='*,*,*,*', Default='*,*,*,*'}"
+              ColumnDefinitions="{OnPlatform iOS='*,*,*,*', Android='*,*,*,*', Default='*,*,*,*'}"
+              HorizontalOptions="Center"
+              VerticalOptions="FillAndExpand">
+        </Grid>
+        <Grid 
+        Grid.Row="2" 
+        Grid.ColumnSpan="2"
+        HorizontalOptions="Center"
+        VerticalOptions="End"
+        Margin="20">
+
+            <!-- Definisanje dva reda i tri kolone za dugmice -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <!-- Buttons na dnu aplikacije -->
+        
+
+            <Button    
+                
+                        Text="Zapocni igru"
+                        CornerRadius="20"
+                        FontSize="8"
+                        Clicked="OnStartGameClicked"
+                        HorizontalOptions="Center"
+                        Grid.Row="0"
+                        Grid.Column="0"
+                         Margin="10"   />
+
+            <Button    Text="Reset mreze"
+                       CornerRadius="20"
+                       Grid.Row="0"
+                        Grid.Column="1"
+                       FontSize="8"
+                       Clicked="OnUndoClicked"
+                       HorizontalOptions="Center" Margin="10" />
+
+            <Button
+                      Text="Provjera rjesenja"
+                      CornerRadius="20"
+                      FontSize="8"
+                      Clicked="CheckAnswerButton_Clicked"
+                      HorizontalOptions="Center"
+                      VerticalOptions="End" 
+                      Grid.Row="1"
+                      Grid.Column="1" Margin="10" />
+            
+            <Button 
+                     Text="Rijesi puzlu"
+                     FontSize="8"
+                     CornerRadius="20"
+                     Clicked="ShowSolutionButton_Clicked"
+                     HorizontalOptions="Center"
+                     Grid.Row="0"
+                    Grid.Column="2"   Margin="10"        />
+            
+            <Button Text="Savjet"
+                    CornerRadius="20"
+                    FontSize="8"
+                    Clicked="ShowHintButton_Clicked"
+                    HorizontalOptions="Center"
+                    Grid.Row="1"
+                    Grid.Column="0" Margin="10"/>
+
+            
+            <Label 
+                     Grid.Row="1" 
+                     Grid.Column="2" 
+                     HorizontalOptions="Center" 
+                     VerticalOptions="Center" Margin="10"/>
+    
+        
+        </Grid>
+    </VerticalStackLayout>
+
+</ContentPage>
