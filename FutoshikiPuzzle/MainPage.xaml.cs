@@ -308,96 +308,96 @@ namespace FutoshikiPuzzle
         }
 
 
-        private bool SolvePuzzle(Cell[,] cells, Constraint[] constraints, int row = 0, int col = 0)
+        private bool SolvePuzzle(Cell[,] cells, Constraint[] constraints)
         {
             int gridSize = cells.GetLength(0);
 
-            if (row == gridSize)
+            for (int row = 0; row < gridSize; row++)
             {
-                
-                return true;
-            }
-
-            int nextRow = (col == gridSize - 1) ? row + 1 : row;
-            int nextCol = (col == gridSize - 1) ? 0 : col + 1;
-
-            if (cells[row, col].Value.HasValue)
-            {
-                // Preskoci vec popunjene celije
-                return SolvePuzzle(cells, constraints, nextRow, nextCol);
-            }
-
-            foreach (int value in cells[row, col].Candidates)
-            {
-                if (IsValid(cells, row, col, value) &&
-                    constraints.All(constraint => constraint.IsSatisfied()))
-                {
-                    cells[row, col].Value = value;
-
-                    if (SolvePuzzle(cells, constraints, nextRow, nextCol))
-                    {
-                        return true;
-                    }
-
-                    cells[row, col].Value = null; // Backtrack algoritam
-                }
-            }
-
-            return false; // Nije pronadjeno rjesenje
-        }
-
-
-        private (int row, int col) FindEmptyCell(Cell[,] cells)
-        {
-            for (int row = 0; row < cells.GetLength(0); row++)
-            {
-                for (int col = 0; col < cells.GetLength(1); col++)
+                for (int col = 0; col < gridSize; col++)
                 {
                     if (!cells[row, col].Value.HasValue)
                     {
-                        return (row, col);
+                        for (int num = 1; num <= gridSize; num++)
+                        {
+                            if (IsValid(cells, row, col, num, constraints))
+                            {
+                                cells[row, col].Value = num;
+
+                                if (SolvePuzzle(cells, constraints))
+                                {
+                                    return true;
+                                }
+
+                                cells[row, col].Value = null;
+                            }
+                        }
+                        return false;
                     }
                 }
             }
-            return (-1, -1); // nema praznih celija
+
+            return true; // Solved!
         }
 
-        private bool IsValid(Cell[,] cells, int row, int col, int value)
+        private bool ConstraintsSatisfied(Cell[,] cells, Constraint[] constraints)
         {
-            // Privremeno postavi vrijednost da se testira ispravnost
-            var tempValue = cells[row, col].Value;
-            cells[row, col].Value = value;
+            foreach (var constraint in constraints)
+            {
+                if (!constraint.IsSatisfied())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
 
-            bool isValid = true;
 
-            // Provjeri red
+        private bool IsValid(Cell[,] cells, int row, int col, int value, Constraint[] constraints)
+        {
+            // Check row for duplicate
             for (int c = 0; c < cells.GetLength(1); c++)
             {
                 if (c != col && cells[row, c].Value == value)
                 {
-                    isValid = false;
-                    break;
+                    return false;
                 }
             }
 
-            // Provjeri kolonu
-            if (isValid)
+            // Check column for duplicate
+            for (int r = 0; r < cells.GetLength(0); r++)
             {
-                for (int r = 0; r < cells.GetLength(0); r++)
+                if (r != row && cells[r, col].Value == value)
                 {
-                    if (r != row && cells[r, col].Value == value)
-                    {
-                        isValid = false;
-                        break;
-                    }
+                    return false;
                 }
             }
 
-            // Vrati originalnu vrijednost
-            cells[row, col].Value = tempValue;
+            // Check constraints
+            foreach (var constraint in constraints)
+            {
+                if (constraint.Cell1.Row == row && constraint.Cell1.Column == col)
+                {
+                    if (constraint.Type == ConstraintType.GreaterThan && value <= constraint.Cell2.Value)
+                        return false;
 
-            return isValid;
+                    if (constraint.Type == ConstraintType.LessThan && value >= constraint.Cell2.Value)
+                        return false;
+                }
+                else if (constraint.Cell2.Row == row && constraint.Cell2.Column == col)
+                {
+                    if (constraint.Type == ConstraintType.GreaterThan && value >= constraint.Cell1.Value)
+                        return false;
+
+                    if (constraint.Type == ConstraintType.LessThan && value <= constraint.Cell1.Value)
+                        return false;
+                }
+            }
+
+            return true;
         }
+
+
 
         private bool ValidateConstraints(Cell[,] cells, Constraint[] constraints)
         {
@@ -411,44 +411,52 @@ namespace FutoshikiPuzzle
             return true;
         }
         //original kod bez paralelizacije 
-          private void ShowSolutionButton_Clicked(object sender, EventArgs e)
-          {
-              int gridSize = PuzzleGrid.RowDefinitions.Count / 2 + 1;
-              Cell[,] cells = new Cell[gridSize, gridSize];
-              Constraint[] constraints = GetConstraints(); // metoda da prikupimo sva pravila odnosno Constraint-ove
-        
-              // inicijalizuj celije
-              for (int row = 0; row < gridSize; row++)
-              {
-                  for (int col = 0; col < gridSize; col++)
-                  {
-                      cells[row, col] = new Cell(row, col, gridSize);
-                  }
-              }
-        
-              // Rjesavanje puzle
-              if (SolvePuzzle(cells, constraints))
-              {
-                  //Popuni mrezu sa rjesenjem
-                  foreach (var cell in cells)
-                  {
-                      var frame = PuzzleGrid.Children
-                          .Cast<View>()
-                          .FirstOrDefault(c => Grid.GetRow(c) == cell.Row * 2 && Grid.GetColumn(c) == cell.Column * 2) as Frame;
-                      var entry = frame?.Content as Entry;
-        
-                      if (entry != null)
-                      {
-                          entry.Text = cell.Value.ToString();
-                      }
-                  }
-                  DisplayAlert("Rjesenje", "Puzla je rijesena!", "OK");
-              }
-              else
-              {
-                  DisplayAlert("Greska", "Nemoguce rijesiti puzlu.", "OK");
-              }
-          }
+        private void ShowSolutionButton_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                int gridSize = PuzzleGrid.RowDefinitions.Count / 2 + 1;
+                Cell[,] cells = new Cell[gridSize, gridSize];
+                Constraint[] constraints = GetConstraints(); // Method to get all constraints
+
+                // Initialize cells
+                for (int row = 0; row < gridSize; row++)
+                {
+                    for (int col = 0; col < gridSize; col++)
+                    {
+                        cells[row, col] = new Cell(row, col, gridSize);
+                    }
+                }
+
+                // Solve the puzzle
+                if (SolvePuzzle(cells, constraints))
+                {
+                    // Populate the grid with the solution
+                    foreach (var cell in cells)
+                    {
+                        var frame = PuzzleGrid.Children
+                            .Cast<View>()
+                            .FirstOrDefault(c => Grid.GetRow(c) == cell.Row * 2 && Grid.GetColumn(c) == cell.Column * 2) as Frame;
+                        var entry = frame?.Content as Entry;
+
+                        if (entry != null)
+                        {
+                            entry.Text = cell.Value.ToString();
+                        }
+                    }
+                    DisplayAlert("Solution", "The puzzle has been solved!", "OK");
+                }
+                else
+                {
+                    DisplayAlert("Error", "Unable to solve the puzzle.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                DisplayAlert("Error", $"An exception occurred: {ex.Message}", "OK");
+            }
+        }
+
 
 
 
@@ -462,9 +470,9 @@ namespace FutoshikiPuzzle
         {
             int gridSize = PuzzleGrid.RowDefinitions.Count / 2 + 1;
             Cell[,] cells = new Cell[gridSize, gridSize];
-            Constraint[] constraints = GetConstraints(); // Method to get all constraints
+            Constraint[] constraints = GetConstraints(); // Get all constraints
 
-            // Initialize cells from the current state of the grid
+            // Initialize cells
             for (int row = 0; row < gridSize; row++)
             {
                 for (int col = 0; col < gridSize; col++)
@@ -474,56 +482,43 @@ namespace FutoshikiPuzzle
                         .FirstOrDefault(c => Grid.GetRow(c) == row * 2 && Grid.GetColumn(c) == col * 2) as Frame;
                     var entry = frame?.Content as Entry;
 
-                    int value;
-                    if (entry != null && int.TryParse(entry.Text, out value))
+                    int? value = null;
+                    if (entry != null && int.TryParse(entry.Text, out int parsedValue))
                     {
-                        cells[row, col] = new Cell(row, col, gridSize) { Value = value };
+                        value = parsedValue;
                     }
-                    else
-                    {
-                        cells[row, col] = new Cell(row, col, gridSize);
-                    }
+
+                    cells[row, col] = new Cell(row, col, gridSize) { Value = value };
                 }
             }
 
-            // Find a cell that can be determined based on the current constraints and state
-            for (int row = 0; row < gridSize; row++)
+            // Solve the puzzle to find a hint
+            if (SolvePuzzle(cells, constraints))
             {
-                for (int col = 0; col < gridSize; col++)
+                // Find the first empty cell in the original puzzle and provide a hint
+                for (int row = 0; row < gridSize; row++)
                 {
-                    if (!cells[row, col].Value.HasValue)
+                    for (int col = 0; col < gridSize; col++)
                     {
-                        // Check possible values for the cell based on constraints
-                        var possibleValues = cells[row, col].Candidates
-                            .Where(val => IsValid(cells, row, col, val) &&
-                                          constraints.All(constraint => constraint.IsSatisfied()))
-                            .ToList();
+                        var frame = PuzzleGrid.Children
+                            .Cast<View>()
+                            .FirstOrDefault(c => Grid.GetRow(c) == row * 2 && Grid.GetColumn(c) == col * 2) as Frame;
+                        var entry = frame?.Content as Entry;
 
-                        if (possibleValues.Count == 1)
+                        if (entry != null && string.IsNullOrEmpty(entry.Text))
                         {
-                            // If there's only one valid candidate, it's a strong hint
-                            var hintValue = possibleValues.First();
-
-                            var hintFrame = PuzzleGrid.Children
-                                .Cast<View>()
-                                .FirstOrDefault(c => Grid.GetRow(c) == row * 2 && Grid.GetColumn(c) == col * 2) as Frame;
-                            var hintEntry = hintFrame?.Content as Entry;
-
-                            if (hintEntry != null)
-                            {
-                                hintEntry.Text = hintValue.ToString();
-                            }
-
-                            DisplayAlert("Savjet", $"Ispravan broj za Red  {row + 1}, Kolonu {col + 1} je {hintValue}.", "OK");
-                            return;
+                            entry.Text = cells[row, col].Value.ToString();
+                            return; // Provide one hint and return
                         }
                     }
                 }
             }
-
-            // If no hints could be found
-            DisplayAlert("Savjet", "Nisu pronadjeni savjeti na osnovu trenutnog stanja u igri.", "OK");
+            else
+            {
+                DisplayAlert("Error", "Unable to find a valid hint.", "OK");
+            }
         }
+
 
         private Constraint[] GetConstraints()
         {
