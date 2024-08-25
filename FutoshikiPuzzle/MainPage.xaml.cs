@@ -444,11 +444,11 @@ namespace FutoshikiPuzzle
                             entry.Text = cell.Value.ToString();
                         }
                     }
-                    DisplayAlert("Solution", "The puzzle has been solved!", "OK");
+                    DisplayAlert("Rjesenje", "Puzla je rijesena!", "OK");
                 }
                 else
                 {
-                    DisplayAlert("Error", "Unable to solve the puzzle.", "OK");
+                    DisplayAlert("Greska", "Nemoguce rijesiti puzlu.", "OK");
                 }
             }
             catch (Exception ex)
